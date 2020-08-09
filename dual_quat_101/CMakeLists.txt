@@ -2,16 +2,42 @@ cmake_minimum_required(VERSION 3.0.2)
 project(dual_quat_101)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+roscpp
+rospy
+rosconsole
+std_msgs
+sensor_msgs
+tf2
+tf2_ros
+)
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS 
+system
+thread
+)
 
+## using eigen3
+find_library(Eigen3 REQUIRED eigen3)
+include_directories(${EIGEN3_INCLUDE_DIR})
+add_definitions(${EIGEN3_DEFINITIONS})
+
+if(NOT EIGEN3_FOUND)
+    # Fallback to cmake_modules
+    find_package(cmake_modules REQUIRED)
+    find_package(Eigen REQUIRED)
+    set(EIGEN3_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+    set(EIGEN3_LIBRARIES ${EIGEN_LIBRARIES})  # Not strictly necessary as Eigen is head only
+    # Possibly map additional variables to the EIGEN3_ prefix.
+else()
+    set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+endif()
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -99,11 +125,19 @@ find_package(catkin REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES dual_quat_101
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
+  INCLUDE_DIRS lib src
+  CATKIN_DEPENDS
+  roscpp
+  rospy
+  rosconsole
+  std_msgs
+  sensor_msgs
+  tf2
+  tf2_ros
+  DEPENDS
+  Eigen
 )
+
 
 ###########
 ## Build ##
@@ -112,14 +146,25 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-# ${catkin_INCLUDE_DIRS}
+  include
+  src
+  lib
+  ${catkin_INCLUDE_DIRS}
+  ${BOOST_INCLUDE_DIRS}
+  /usr/local/include
 )
+
+link_directories(${BOOST_LIBRARY_DIRS} /usr/local/lib /usr/lib)
+add_definitions(${BOOST_DEFINITIONS})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/dual_quat_101.cpp
 # )
+
+add_executable(quaternion_operations_node lib/quaternion_operations.cpp include/quaternion_operations.h src/main_quaternion.cpp)
+target_link_libraries(quaternion_operations_node ${catkin_LIBRARIES} ${EIGEN_LIBRARIES})
+add_dependencies(quaternion_operations_node ${catkin_EXPORTED_TARGETS})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
