@@ -162,9 +162,13 @@ add_definitions(${BOOST_DEFINITIONS})
 #   src/${PROJECT_NAME}/dual_quat_101.cpp
 # )
 
-add_executable(quaternion_operations_node lib/quaternion_operations.cpp include/quaternion_operations.h src/main_quaternion.cpp)
+add_executable(quaternion_operations_node lib/quaternion_operations.cpp include/quaternion_operations.h include/global_header.h src/main_quaternion.cpp)
 target_link_libraries(quaternion_operations_node ${catkin_LIBRARIES} ${EIGEN_LIBRARIES})
 add_dependencies(quaternion_operations_node ${catkin_EXPORTED_TARGETS})
+
+add_executable(dual_quaternion_operations_node lib/quaternion_operations.cpp lib/dual_quaternion_operations.cpp include/quaternion_operations.h include/dual_quaternion_operations.h include/global_header.h src/main_dual_quaternion.cpp)
+target_link_libraries(dual_quaternion_operations_node ${catkin_LIBRARIES} ${EIGEN_LIBRARIES})
+add_dependencies(dual_quaternion_operations_node ${catkin_EXPORTED_TARGETS})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

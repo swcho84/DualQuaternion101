@@ -12,137 +12,6 @@ QuaternionOperation::~QuaternionOperation()
 {
 }
 
-void QuaternionOperation::MainLoop()
-{
-  // assigning the quaternion directly
-  Quaterniond q1;
-  q1 = CalcSingleQuaternion(-0.002, -0.780, 0.260, 0.569);
-  ROS_INFO("input, q1:(x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q1.x(), q1.y(), q1.z(), q1.w());
-
-  // converting the quaternion to the Euler angle(3-2-1, ZYX, YPR)
-  Vector3d vecEulerQ1;
-  vecEulerQ1 = QuaternionOperation::CalcYPREulerAngFromQuaternion(q1);
-  ROS_INFO("input, q1:euler(3-2-1):(r,p,y)=(%.4lf,%.4lf,%.4lf)", vecEulerQ1(0) * R2D, vecEulerQ1(1) * R2D,
-           vecEulerQ1(2) * R2D);
-
-  ROS_INFO(" ");
-
-  // converting the Euler angle(3-2-1, ZYX, YPR) to the quaternion
-  Quaterniond q1CrsCheck;
-  q1CrsCheck = CalcQuaternionFromYPREulerAng(vecEulerQ1);
-  ROS_INFO("input, q1ROSCrsCheck:(x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q1CrsCheck.x(), q1CrsCheck.y(), q1CrsCheck.z(),
-           q1CrsCheck.w());
-
-  ROS_INFO(" ");
-
-  // assigning the quaternion directly
-  Quaterniond q2;
-  q2 = CalcSingleQuaternion(0.4619398, -0.1913417, 0.4619398, 0.7325378);
-  ROS_INFO("input, q2:(x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q2.x(), q2.y(), q2.z(), q2.w());
-
-  // converting the quaternion to the Euler angle(3-2-1, ZYX, YPR)
-  Vector3d vecEulerQ2;
-  vecEulerQ2 = QuaternionOperation::CalcYPREulerAngFromQuaternion(q2);
-  ROS_INFO("input, q1:euler(3-2-1):(r,p,y)=(%.4lf,%.4lf,%.4lf)", vecEulerQ2(0) * R2D, vecEulerQ2(1) * R2D,
-           vecEulerQ2(2) * R2D);
-
-  ROS_INFO(" ");
-
-  // converting the Euler angle(3-2-1, ZYX, YPR) to the quaternion
-  Quaterniond q2CrsCheck;
-  q2CrsCheck = CalcQuaternionFromYPREulerAng(vecEulerQ2);
-  ROS_INFO("input, q2ROSCrsCheck:(x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q2CrsCheck.x(), q2CrsCheck.y(), q2CrsCheck.z(),
-           q2CrsCheck.w());
-
-  ROS_INFO(" ");
-
-  // calculating addition w.r.t the quaternions
-  Quaterniond qAddRes = CalcAddQuaternions(q1, q2);
-  ROS_INFO("ouput, add = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", qAddRes.x(), qAddRes.y(), qAddRes.z(), qAddRes.w());
-
-  ROS_INFO(" ");
-
-  // calculating subtraction w.r.t the quaternions
-  Quaterniond qSubRes = CalcSubQuaternions(q1, q2);
-  ROS_INFO("ouput, sub = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", qSubRes.x(), qSubRes.y(), qSubRes.z(), qSubRes.w());
-
-  ROS_INFO(" ");
-
-  // calculating the conjugate quaternion
-  Quaterniond q1ConjRes = CalcConjugateQuaternion(q1);
-  ROS_INFO("ouput, conj,q1 = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q1ConjRes.x(), q1ConjRes.y(), q1ConjRes.z(),
-           q1ConjRes.w());
-
-  ROS_INFO(" ");
-
-  // calculating the conjugate quaternion
-  Quaterniond q2ConjRes = CalcConjugateQuaternion(q2);
-  ROS_INFO("ouput, conj,q2 = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q2ConjRes.x(), q2ConjRes.y(), q2ConjRes.z(),
-           q2ConjRes.w());
-
-  ROS_INFO(" ");
-
-  // calculating the quaternion multiplication
-  Quaterniond qMulRes = CalcMultiplyQuaternions(q1, q2);
-  ROS_INFO("ouput, mul = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", qMulRes.x(), qMulRes.y(), qMulRes.z(), qMulRes.w());
-
-  ROS_INFO(" ");
-
-  // 3x3 matrix
-  ROS_INFO("output, q1, skew matrix by quaternion");
-  cout << CalcQuaternionSkewMatrix(q1) << endl;
-
-  ROS_INFO(" ");
-
-  // 3x3 matrix
-  ROS_INFO("output, q1, quaternion rotation matrix");
-  cout << CalcQuaternionRotationMatrix(q1) << endl;
-
-  ROS_INFO(" ");
-
-  // calculating the axis-angle from the quaternion
-  Vector4d axisInfoQ1;
-  axisInfoQ1 = CalcAxisAngFromQuaternion(q1);
-  ROS_INFO("ouput, axisInfo, q1 = (x,y,z,theta)=(%.4lf,%.4lf,%.4lf,%.4lf)", axisInfoQ1(0), axisInfoQ1(1), axisInfoQ1(2),
-           axisInfoQ1(3) * R2D);
-
-  ROS_INFO(" ");
-
-  // calculating the axis with the magnitude from the quaternion
-  Vector3d normAxisQ1;
-  normAxisQ1 = CalcAxisMagFromQuaternion(CalcAxisAngFromQuaternion(q1));
-  ROS_INFO("ouput, axisNorm, q1 = (x,y,z)=(%.4lf,%.4lf,%.4lf)", normAxisQ1(0) * R2D, normAxisQ1(1) * R2D,
-           normAxisQ1(2) * R2D);
-
-  ROS_INFO(" ");
-
-  // 3x3 matrix
-  ROS_INFO("output, q2, skew matrix by quaternion");
-  cout << CalcQuaternionSkewMatrix(q2) << endl;
-
-  ROS_INFO(" ");
-
-  // 3x3 matrix
-  ROS_INFO("output, q2, quaternion rotation matrix");
-  cout << CalcQuaternionRotationMatrix(q2) << endl;
-
-  ROS_INFO(" ");
-
-  // calculating the axis-angle from the quaternion
-  Vector4d axisInfoQ2;
-  axisInfoQ2 = CalcAxisAngFromQuaternion(q2);
-  ROS_INFO("ouput, axisInfo, q2 = (x,y,z,theta)=(%.4lf,%.4lf,%.4lf,%.4lf)", axisInfoQ2(0), axisInfoQ2(1), axisInfoQ2(2),
-           axisInfoQ2(3) * R2D);
-
-  ROS_INFO(" ");
-
-  // calculating the axis with the magnitude from the quaternion
-  Vector3d normAxisQ2;
-  normAxisQ2 = CalcAxisMagFromQuaternion(CalcAxisAngFromQuaternion(q2));
-  ROS_INFO("ouput, axisNorm, q2 = (x,y,z)=(%.4lf,%.4lf,%.4lf)", normAxisQ2(0) * R2D, normAxisQ2(1) * R2D,
-           normAxisQ2(2) * R2D);
-}
-
 // calculating addition w.r.t the quaternions
 Quaterniond QuaternionOperation::CalcAddQuaternions(Quaterniond q1, Quaterniond q2)
 {
@@ -210,12 +79,26 @@ Matrix3d QuaternionOperation::CalcQuaternionRotationMatrix(Quaterniond q)
   Iden = Matrix3d::Identity();
   double q0 = q.w();
   result = (q0 * q0 - q.vec().transpose() * q.vec()) * (Iden) + (2.0) * (q.vec() * q.vec().transpose()) -
-           (2.0) * (q0) * (CalcQuaternionSkewMatrix(q));
+           (2.0) * (q0) * (CalcQuaternionSymmSkewMatrix(q));
+  return result;
+}
+
+// calculating the skew matrix for RPY, 1-2-3 transformation
+Matrix3d QuaternionOperation::CalcQuaternionSkewMatrix(Quaterniond q)
+{
+  Matrix3d result;
+  result.setZero();
+  result(0, 1) = -q.z();
+  result(0, 2) = q.y();
+  result(1, 0) = q.z();
+  result(1, 2) = -q.x();
+  result(2, 0) = -q.y();
+  result(2, 1) = q.x();
   return result;
 }
 
 // calculating the skew matrix for YPR, 3-2-1 transformation
-Matrix3d QuaternionOperation::CalcQuaternionSkewMatrix(Quaterniond q)
+Matrix3d QuaternionOperation::CalcQuaternionSymmSkewMatrix(Quaterniond q)
 {
   Matrix3d result;
   result.setZero();
@@ -339,6 +222,11 @@ Matrix3d QuaternionOperation::GetQuaternionRotationMatrix(Quaterniond q)
 Matrix3d QuaternionOperation::GetQuaternionSkewMatrix(Quaterniond q)
 {
   return CalcQuaternionSkewMatrix(q);
+}
+
+Matrix3d QuaternionOperation::GetQuaternionSymmSkewMatrix(Quaterniond q)
+{
+  return CalcQuaternionSymmSkewMatrix(q);
 }
 
 Quaterniond QuaternionOperation::GetSingleQuaternion(double qx, double qy, double qz, double qw)

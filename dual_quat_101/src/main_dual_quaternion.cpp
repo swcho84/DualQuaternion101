@@ -1,4 +1,4 @@
-#include "quaternion_operations.h"
+#include "dual_quaternion_operations.h"
 
 using namespace std;
 using namespace ros;
@@ -12,17 +12,18 @@ using namespace Eigen;
 int main(int argc, char** argv)
 {
   // Set up ROS.
-  init(argc, argv, "quaternion_operations_node");
+  init(argc, argv, "dual_quaternion_operations_node");
   NodeHandle nh("");
 
-  QuaternionOperation quatOper;
+  DualQuaternionOperation dualQuatOper;
 
   // Tell ROS how fast to run this node.
   Rate loopRate(30);
 
+  dualQuatOper.MainLoop();
   spin();
 
-  quatOper.~QuaternionOperation();
+  dualQuatOper.~DualQuaternionOperation();
 
   return 0;
 }  // end main()
