@@ -42,6 +42,51 @@ QuatPos DualQuaternionOperation::CalcDualQuaternion2AttPos(DualQuaternion dualQu
   return result;
 }
 
+DualQuaternion DualQuaternionOperation::CalcConjugateDualQuaternion(DualQuaternion dualQuat)
+{
+  DualQuaternion result;
+  result.qReal = quatOper_.GetConjugateQuaternion(dualQuat.qReal);
+  result.qDual = quatOper_.GetConjugateQuaternion(dualQuat.qDual);
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcMultiplyDualQuaternions(DualQuaternion dualQuat1, DualQuaternion dualQuat2)
+{
+  DualQuaternion result;
+  result.qReal = quatOper_.GetMultiplyQuaternions(dualQuat1.qReal, dualQuat2.qReal);
+  result.qDual = quatOper_.GetAddQuaternions(quatOper_.GetMultiplyQuaternions(dualQuat1.qReal, dualQuat2.qDual),
+                                             quatOper_.GetMultiplyQuaternions(dualQuat1.qDual, dualQuat2.qReal));
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcAddDualQuaternions(DualQuaternion dualQuat1, DualQuaternion dualQuat2)
+{
+  DualQuaternion result;
+  result.qReal = quatOper_.GetAddQuaternions(dualQuat1.qReal, dualQuat2.qReal);
+  result.qDual = quatOper_.GetAddQuaternions(dualQuat1.qDual, dualQuat2.qDual);
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcSubDualQuaternions(DualQuaternion dualQuat1, DualQuaternion dualQuat2)
+{
+  DualQuaternion result;
+  result.qReal = quatOper_.GetSubQuaternions(dualQuat1.qReal, dualQuat2.qReal);
+  result.qDual = quatOper_.GetSubQuaternions(dualQuat1.qDual, dualQuat2.qDual);
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcPureRotationDualQuaternion(DualQuaternion dualQuat)
+{
+  DualQuaternion result;
+  result.qReal = dualQuat.qReal;
+  result.qDual.x() = 0.0;
+  result.qDual.y() = 0.0;
+  result.qDual.z() = 0.0;
+  result.qDual.w() = 0.0;
+  return result;
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------------
 DualQuaternion DualQuaternionOperation::GetAttPos2DualQuaternion(Quaterniond qAtt, Vector3d pos)
 {
   return CalcAttPos2Quaternion(qAtt, pos);
@@ -51,3 +96,28 @@ QuatPos DualQuaternionOperation::GetDualQuaternion2AttPos(DualQuaternion dualQua
 {
   return CalcDualQuaternion2AttPos(dualQuat);
 }
+
+DualQuaternion DualQuaternionOperation::GetConjugateDualQuaternion(DualQuaternion dualQuat)
+{
+  return CalcConjugateDualQuaternion(dualQuat);
+}
+DualQuaternion DualQuaternionOperation::GetMultiplyDualQuaternions(DualQuaternion dualQuat1, DualQuaternion dualQuat2)
+{
+  return CalcMultiplyDualQuaternions(dualQuat1, dualQuat2);
+}
+
+DualQuaternion DualQuaternionOperation::GetAddDualQuaternions(DualQuaternion dualQuat1, DualQuaternion dualQuat2)
+{
+  return CalcAddDualQuaternions(dualQuat1, dualQuat2);
+}
+
+DualQuaternion DualQuaternionOperation::GetSubDualQuaternions(DualQuaternion dualQuat1, DualQuaternion dualQuat2)
+{
+  return CalcSubDualQuaternions(dualQuat1, dualQuat2);
+}
+
+DualQuaternion DualQuaternionOperation::GetPureRotationDualQuaternion(DualQuaternion dualQuat)
+{
+  return CalcPureRotationDualQuaternion(dualQuat);
+}
+// -------------------------------------------------------------------------------------------------------------------------------------------------------

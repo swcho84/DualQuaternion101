@@ -8,6 +8,12 @@ using namespace std;
 using namespace ros;
 using namespace Eigen;
 
+template <typename T>
+T sinc(T x)
+{
+  return (x == 0) ? 1 : std::sin(x) / x;
+}
+
 class QuaternionOperation
 {
 public:
@@ -22,6 +28,8 @@ public:
   Quaterniond GetScalarMultiplyQuaternion(double scalar, Quaterniond q);
   Quaterniond GetMultiplyQuaternions(Quaterniond q1, Quaterniond q2);
   Quaterniond GetHalfQuaternion(Quaterniond q);
+  Quaterniond GetExpQuaternion(Quaterniond q);
+  Quaterniond GetLogQuaternion(Quaterniond q);
   double GetNormQuaternion(Quaterniond q);
   Matrix3d GetQuaternionRotationMatrix(Quaterniond q);
   Matrix3d GetQuaternionSkewMatrix(Quaterniond q);
@@ -45,6 +53,8 @@ private:
   Quaterniond CalcScalarMultiplyQuaternion(double scalar, Quaterniond q);
   Quaterniond CalcMultiplyQuaternions(Quaterniond q1, Quaterniond q2);
   Quaterniond CalcHalfQuaternion(Quaterniond q);
+  Quaterniond CalcExpQuaternion(Quaterniond q);
+  Quaterniond CalcLogQuaternion(Quaterniond q);
   double CalcNormQuaternion(Quaterniond q);
   Matrix3d CalcQuaternionRotationMatrix(Quaterniond q);
   Matrix3d CalcQuaternionSkewMatrix(Quaterniond q);

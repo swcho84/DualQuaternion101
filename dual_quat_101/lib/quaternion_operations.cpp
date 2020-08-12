@@ -65,6 +65,53 @@ Quaterniond QuaternionOperation::CalcHalfQuaternion(Quaterniond q)
   return result;
 }
 
+// calculating exponential quaternion
+Quaterniond QuaternionOperation::CalcExpQuaternion(Quaterniond q)
+{
+  Quaterniond result;
+  double vecNorm = q.vec().norm();
+  double expqW = exp(q.w());
+
+  if (vecNorm == 0.0)
+  {
+    result.x() = 0.0;
+    result.y() = 0.0;
+    result.z() = 0.0;
+    result.w() = expqW;
+  }
+  else
+  {
+    result.w() = (expqW) * (cos(vecNorm));
+    result.vec() = (expqW) * (sinc(vecNorm)) * (q.vec());
+  }
+
+  return result;
+}
+
+// calculating log quaternion
+Quaterniond QuaternionOperation::CalcLogQuaternion(Quaterniond q)
+{
+  Quaterniond result;
+  double expqW = exp(q.w());
+  double logqW = log(expqW);
+  double a = acos(q.w() / expqW);
+
+  if (a == 0.0)
+  {
+    result.x() = 0.0;
+    result.y() = 0.0;
+    result.z() = 0.0;
+    result.w() = logqW;
+  }
+  else
+  {
+    result.w() = logqW;
+    result.vec() = (q.vec()) / (expqW) / ((sin(a)) / (a));
+  }
+
+  return result;
+}
+
 // calculating the 2-norm of the quaternion
 double QuaternionOperation::CalcNormQuaternion(Quaterniond q)
 {
@@ -207,6 +254,16 @@ Quaterniond QuaternionOperation::GetMultiplyQuaternions(Quaterniond q1, Quaterni
 Quaterniond QuaternionOperation::GetHalfQuaternion(Quaterniond q)
 {
   return CalcHalfQuaternion(q);
+}
+
+Quaterniond QuaternionOperation::GetExpQuaternion(Quaterniond q)
+{
+  return CalcExpQuaternion(q);
+}
+
+Quaterniond QuaternionOperation::GetLogQuaternion(Quaterniond q)
+{
+  return CalcLogQuaternion(q);
 }
 
 double QuaternionOperation::GetNormQuaternion(Quaterniond q)
