@@ -24,7 +24,7 @@ DualQuaternion DualQuaternionOperation::CalcAttPos2Quaternion(Quaterniond qAtt, 
   qPos.y() = pos(1);
   qPos.z() = pos(2);
   qPos.w() = 0.0;
-  result.qReal = q;
+  result.qReal = qPos;
   result.qDual = quatOper_.GetScalarMultiplyQuaternion(0.5, quatOper_.GetMultiplyQuaternions(qPos, qAtt));
   return result;
 }
@@ -44,10 +44,10 @@ QuatPos DualQuaternionOperation::CalcDualQuaternion2AttPos(DualQuaternion dualQu
 
 DualQuaternion DualQuaternionOperation::GetAttPos2DualQuaternion(Quaterniond qAtt, Vector3d pos)
 {
-  return CalcAttPos2Quaternions(qAtt, pos);
+  return CalcAttPos2Quaternion(qAtt, pos);
 }
 
 QuatPos DualQuaternionOperation::GetDualQuaternion2AttPos(DualQuaternion dualQuat)
 {
-  return CalcDualQuaternion2AttPos(dualQuat)
+  return CalcDualQuaternion2AttPos(dualQuat);
 }
