@@ -86,6 +86,65 @@ DualQuaternion DualQuaternionOperation::CalcPureRotationDualQuaternion(DualQuate
   return result;
 }
 
+DualQuaternion DualQuaternionOperation::CalcExponentialDualQuaternion(DualQuaternion dualQuat)
+{
+  DualQuaternion result;
+  result.qReal = quatOper_.GetExpQuaternion(dualQuat.qReal);
+  result.qDual = quatOper_.GetMultiplyQuaternions(result.qReal, dualQuat.qDual);
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcLogDualQuaternion(DualQuaternion dualQuat)
+{
+  DualQuaternion result;
+  result.qReal = quatOper_.GetLogQuaternion(dualQuat.qReal);
+  result.qDual = quatOper_.GetMultiplyQuaternions(quatOper_.GetConjugateQuaternion(dualQuat.qReal), dualQuat.qDual);
+  double scale = (1.0) / (dualQuat.qReal.squaredNorm());
+  result.qDual.coeffs() *= scale;
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcInverseQuaternion(DualQuaternion dualQuat)
+{
+  DualQuaternion result;
+  double sqrLen0 = dualQuat.qReal.squaredNorm();
+  double sqrLenE = (2.0) * (dualQuat.qReal.coeffs().dot(dualQuat.qDual.coeffs()));
+
+  if (sqrLen0 > 0.0)
+  {
+    double invSqrLen0 = (1.0) / (sqrLen0);
+    double invSqrLenE = ((-1.0) * (sqrLenE)) / ((sqrLen0) * (sqrLen0));
+    result.qReal.coeffs() = (invSqrLen0) * ((quatOper_.GetConjugateQuaternion(dualQuat.qReal)).coeffs());
+    result.qDual.coeffs() = (invSqrLen0) * ((quatOper_.GetConjugateQuaternion(dualQuat.qDual)).coeffs()) +
+                            (invSqrLenE) * ((quatOper_.GetConjugateQuaternion(dualQuat.qReal)).coeffs());
+  }
+  else
+  {
+    result.qReal.x() = 0.0;
+    result.qReal.y() = 0.0;
+    result.qReal.z() = 0.0;
+    result.qReal.w() = 0.0;
+    result.qDual.x() = 0.0;
+    result.qDual.y() = 0.0;
+    result.qDual.z() = 0.0;
+    result.qDual.w() = 0.0;
+  }
+
+  return result;
+}
+
+DualQuaternion DualQuaternionOperation::CalcNormalizeQuaternion(DualQuaternion dualQuat)
+{
+  DualQuaternion result;
+  double length = dualQuat.qReal.norm();
+  double lengthSqr = dualQuat.qReal.squaredNorm();
+  result.qReal.coeffs() = (dualQuat.qReal.coeffs()) / (length);
+  result.qDual.coeffs() = (dualQuat.qDual.coeffs()) / (length);
+  result.qDual.coeffs() -=
+      (dualQuat.qReal.coeffs().dot(dualQuat.qDual.coeffs()) * (lengthSqr)) * (dualQuat.qReal.coeffs());
+  return result;
+}
+
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
 DualQuaternion DualQuaternionOperation::GetAttPos2DualQuaternion(Quaterniond qAtt, Vector3d pos)
 {
@@ -119,5 +178,25 @@ DualQuaternion DualQuaternionOperation::GetSubDualQuaternions(DualQuaternion dua
 DualQuaternion DualQuaternionOperation::GetPureRotationDualQuaternion(DualQuaternion dualQuat)
 {
   return CalcPureRotationDualQuaternion(dualQuat);
+}
+
+DualQuaternion DualQuaternionOperation::GetExponentialDualQuaternion(DualQuaternion dualQuat)
+{
+  return CalcExponentialDualQuaternion(dualQuat);
+}
+
+DualQuaternion DualQuaternionOperation::GetLogDualQuaternion(DualQuaternion dualQuat)
+{
+  return CalcLogDualQuaternion(dualQuat);
+}
+
+DualQuaternion DualQuaternionOperation::GetInverseDualQuaternion(DualQuaternion dualQuat)
+{
+  return CalcInverseQuaternion(dualQuat);
+}
+
+DualQuaternion DualQuaternionOperation::GetNormalizeQuaternion(DualQuaternion dualQuat)
+{
+  return CalcNormalizeQuaternion(dualQuat);
 }
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
