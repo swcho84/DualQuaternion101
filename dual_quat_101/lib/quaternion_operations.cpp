@@ -14,22 +14,6 @@ QuaternionOperation::~QuaternionOperation()
 
 void QuaternionOperation::MainLoop()
 {
-  Quaterniond q;
-  q.x() = 0.2710782;
-  q.y() = 0.0090755;
-  q.z() = 0.3503061;
-  q.w() = 0.8965043;
-
-  ROS_INFO("input, q = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", q.x(), q.y(), q.z(), q.w());
-
-  // 3x3 matrix
-  Matrix3d matQatt;
-  matQatt = CalcQuaternionRotationMatrix(q);
-  ROS_INFO("output, q, quaternion rotation matrix");
-  cout << matQatt << endl;
-  
-  Quaterniond qConvFromMat(matQatt);
-  ROS_INFO("output, qConvFromMat = (x,y,z,w)=(%.4lf,%.4lf,%.4lf,%.4lf)", qConvFromMat.x(), qConvFromMat.y(), qConvFromMat.z(), qConvFromMat.w());
 }
 
 // calculating addition w.r.t the quaternions
