@@ -23,10 +23,19 @@
 #define PI 3.141592
 #define D2R PI / 180.0
 #define R2D 180.0 / PI
+#define PRECISION 1e-10
+
+#define POSITION 100
+#define TRNVEC 200
 
 using namespace std;
 using namespace ros;
 using namespace Eigen;
+
+typedef Matrix<double, 3, 4> MatHomoGen;
+typedef Matrix<double, 3, 3> MatRotInfo;
+typedef Matrix<double, 3, 1> MatTrnInfo;
+typedef Matrix<double, 4, 1> VecHomoGen;
 
 typedef struct
 {
@@ -39,5 +48,11 @@ typedef struct
   Quaterniond qAtt;
   Vector3d pos;
 } QuatPos;
+
+typedef struct
+{
+  MatRotInfo mRot;
+  MatTrnInfo mTrn;
+} RotTrnInfo;
 
 #endif  // DUAL_QUAT_101_GLOBAL_HEADER_H

@@ -20,6 +20,7 @@ int main(int argc, char** argv)
   // Tell ROS how fast to run this node.
   Rate loopRate(30);
 
+  quatOper.MainLoop();
   spin();
 
   quatOper.~QuaternionOperation();

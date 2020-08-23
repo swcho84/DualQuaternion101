@@ -145,3 +145,75 @@ void QuaternionOperation::MainLoop()
 //   spinOnce();
 //   loopRate.sleep();
 // }
+
+
+void QuaternionOperation::MainLoop()
+{
+  Vector3d u;
+  u(0) = 1.0;
+  u(1) = 2.0;
+  u(2) = 3.0;
+
+  Vector3d v;
+  v(0) = 3.0;
+  v(1) = 2.0;
+  v(2) = 1.0;
+
+  Vector3d uvAddEigen;
+  Vector3d uvSubEigen;
+  double uvDotEigen;
+  Vector3d uvCrossEigen;  
+  uvAddEigen = u + v;
+  uvSubEigen = u - v;
+  uvDotEigen = u.dot(v);
+  uvCrossEigen = u.cross(v);
+
+  Vector3d uvAddFunc;
+  Vector3d uvSubFunc;
+  double uvDotFunc;
+  Vector3d uvCrossFunc;    
+  uvAddFunc = CalcVec3dAdd(u, v);  
+  uvSubFunc = CalcVec3dSub(u, v);
+  uvDotFunc = CalcVec3dDot(u, v);
+  uvCrossFunc = CalcVec3dCross(u, v);
+
+  ROS_INFO("uvAddEigen:(%.4lf, %.4lf, %.4lf)", uvAddEigen(0), uvAddEigen(1), uvAddEigen(2));
+  ROS_INFO("uvAddFunc:(%.4lf, %.4lf, %.4lf)", uvAddFunc(0), uvAddFunc(1), uvAddFunc(2));
+  ROS_INFO(" ");
+
+  ROS_INFO("uvSubEigen:(%.4lf, %.4lf, %.4lf)", uvSubEigen(0), uvSubEigen(1), uvSubEigen(2));
+  ROS_INFO("uvSubFunc:(%.4lf, %.4lf, %.4lf)", uvSubFunc(0), uvSubFunc(1), uvSubFunc(2));
+  ROS_INFO(" ");
+
+  ROS_INFO("uvDotEigen:(%.4lf)", uvDotEigen);
+  ROS_INFO("uvDotFunc:(%.4lf)", uvDotFunc);
+  ROS_INFO(" ");
+
+  ROS_INFO("uvCrossEigen:(%.4lf, %.4lf, %.4lf)", uvCrossEigen(0), uvCrossEigen(1), uvCrossEigen(2));
+  ROS_INFO("uvCrossFunc:(%.4lf, %.4lf, %.4lf)", uvCrossFunc(0), uvCrossFunc(1), uvCrossFunc(2));
+  ROS_INFO(" ");
+}
+
+
+void QuaternionOperation::MainLoop()
+{
+  Matrix3d matP;
+  matP(0, 0) = 5.0;
+  matP(0, 1) = 3.4;
+  matP(0, 2) = 3.0;
+  matP(1, 0) = 2.0;
+  matP(1, 1) = 5.4;
+  matP(1, 2) = 6.0;
+  matP(2, 0) = 7.0;
+  matP(2, 1) = 8.2;
+  matP(2, 2) = 9.0;
+
+  cout << "matP=" << endl;
+  cout << matP << endl;
+
+  cout << "matI=" << endl;
+  cout << CalcMat3dIdentity() << endl;  
+
+  cout << "matP.determinant=" << matP.determinant() << endl;
+  ROS_INFO("matP.determinant:%lf", CalcMat3dDeterminant(matP));  
+}
